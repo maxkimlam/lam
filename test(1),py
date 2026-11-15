@@ -1,0 +1,68 @@
+def tinh_bmr(gioi_tinh, can_nang, chieu_cao_cm, tuoi):
+    if gioi_tinh.lower() == "nam":
+        bmr = 88.362 + 13.397 * can_nang + 4.799 * chieu_cao_cm - 5.677 * tuoi
+    else:
+        bmr = 447.593 + 9.247 * can_nang + 3.098 * chieu_cao_cm - 4.330 * tuoi
+    return round(bmr)
+
+ho_ten = input("Nhập họ và tên: ")
+gioi_tinh = input("Giới tính (nam/nu): ").strip().lower()
+tuoi = int(input("Tuổi: "))
+
+# Tự động điều chỉnh: nhận diện cm (ví dụ 174) hoặc mét (ví dụ 1.74)
+chieu_cao = float(input("Chiều cao (m hoặc cm): "))
+if chieu_cao > 3:
+    chieu_cao_cm = chieu_cao
+    chieu_cao_m = chieu_cao / 100
+else:
+    chieu_cao_m = chieu_cao
+    chieu_cao_cm = chieu_cao * 100
+
+can_nang = float(input("Cân nặng (kg): "))
+
+bmi = can_nang / (chieu_cao_m ** 2)
+
+if bmi < 15.5:
+    phan_loai = "Thiếu cân"
+    loi_khuyen = "Cần bổ sung đầy đủ dinh dưỡng và tăng cường tập luyện để tăng cân lành mạnh."
+    thanh_do = "[█]----------"
+    vung = "vùng thiếu cân"
+elif bmi < 25:
+    phan_loai = "Bình thường"
+    loi_khuyen = "Duy trì ăn uống cân đối và vận động đều đặn."
+    thanh_do = "-[█]-------"
+    vung = "vùng bình thường"
+elif bmi < 30:
+    phan_loai = "Thừa cân"
+    loi_khuyen = "Nên điều chỉnh chế độ ăn giảm tinh bột, đường và tăng cường vận động."
+    thanh_do = "--[█]------"
+    vung = "vùng thừa cân"
+else:
+    phan_loai = "Béo phì"
+    loi_khuyen = "Cần xây dựng chế độ ăn kiêng nghiêm ngặt và tập luyện dưới sự hướng dẫn."
+    thanh_do = "---[█]-----"
+    vung = "vùng béo phì"
+
+bmr = tinh_bmr(gioi_tinh, can_nang, chieu_cao_cm, tuoi)
+
+print(f"\nBMI của bạn : {bmi:.2f}")
+print(f"Phân loại   : {phan_loai}")
+print(f"Lời khuyên  : {loi_khuyen}")
+print(f"Năng lượng cơ bản (BMR): {bmr:,} Calo/ngày")
+
+while True:
+    muc_tieu = input("Mục tiêu (1: Giảm mỡ | 2: Giữ cân | 3: Tăng cơ): ").strip()
+    if muc_tieu in ("1", "2", "3"):
+        break
+    print("Vui lòng chỉ nhập 1, 2 hoặc 3!")
+
+duy_tri = round(bmr * 1.2)
+if muc_tieu == "1":
+    calo_can_nap = duy_tri - 500
+elif muc_tieu == "2":
+    calo_can_nap = duy_tri
+else:
+    calo_can_nap = duy_tri + 300
+
+print(f"Cần nạp khoảng {calo_can_nap:,} Calo/ngày")
+print(f"Thể trạng: {thanh_do} {vung}")
